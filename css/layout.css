@@ -1,0 +1,95 @@
+@media screen and (max-width: 768px) {
+    .notification-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .notification-bubble {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        background-color: var(--color-primary-mid);
+        color: #f2f2f2dc;
+        border-radius: 10px;
+        padding: 25px;
+    }
+
+    .notification-bubble ol li {
+        margin: 10px;
+    }
+
+    .close-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        cursor: pointer;
+        color: var(--color-white);
+        font-size: 20px;
+        background: none;
+        border: none;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .lien {
+        font-weight: bold;
+        color: var(--color-surface-soft);
+    }
+
+    .container_nav {
+        text-decoration: none;
+        height: auto;
+        width: 100%;
+        padding-top: 50px;
+    }
+
+    .navigation {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        font-size: 20px;
+    }
+
+    .cercle_nav {
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 45px;
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        border: var(--color-surface) solid 10px;
+        background-color: var(--color-primary);
+    }
+
+    .fa-plus {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-surface);
+        font-size: 25px;
+    }
+
+    .fa-qrcode {
+        padding-right: 70px;
+    }
+
+    #nav_footer {
+        margin-bottom: 10px;
+        animation: footerNav 1s ease 0s 1 normal forwards;
+    }
+
+    .icon_link {
+        color: var(--color-text-soft);
+    }
+}

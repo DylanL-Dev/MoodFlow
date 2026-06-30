@@ -1,0 +1,14 @@
+:root {
+    --color-white: #ffffff;
+    --color-surface: #f5f5f5;
+    --color-surface-soft: #f2f2f2;
+    --color-text-muted: #8c8c8c;
+    --color-text-soft: #999999;
+    --color-primary: #299272;
+    --color-primary-soft: #5db894;
+    --color-primary-dark: #1c2d27;
+    --color-primary-mid: #314e44;
+    --color-primary-card: #243d35;
+    --color-primary-muted: #7aa390;
+    --font-main: 'Poppins', sans-serif;
+}

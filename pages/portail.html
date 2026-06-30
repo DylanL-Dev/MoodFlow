@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="../css/style.css" />
+        <link
+            rel="stylesheet"
+            href="../css/normalize.css"
+        />
+        <script
+            defer
+            src="https://kit.fontawesome.com/79857fa36d.js"
+            crossorigin="anonymous"
+        ></script>
+        <title>Self-Care</title>
+    </head>
+    <body>
+        <!-- ===== EN-TÊTE ===== -->
+        <header>
+            <!-- Profil patient -->
+            <section>
+                <div id="container_profil">
+                    <!-- Photo de profil -->
+                    <div id="profilePictureContainer">
+                        <label for="profilePictureInput" id="uploadPictureBtn">
+                            <i
+                                class="fa-solid fa-user-plus"
+                                id="profilePicture"
+                            ></i>
+                        </label>
+                        <input
+                            type="file"
+                            id="profilePictureInput"
+                            accept="image/*"
+                        />
+                    </div>
+
+                    <!-- Nom du patient -->
+                    <section id="patientPortalSection">
+                        <div class="container_user">
+                            <h1 class="name"></h1>
+                            <p class="category">Patient</p>
+                        </div>
+                    </section>
+
+                    <!-- Cloche de notification -->
+                    <div
+                        class="container_notification clignote"
+                        id="cloche"
+                        role="button"
+                        aria-label="Notifications"
+                        tabindex="0"
+                    >
+                        <i class="fa-solid fa-bell"></i>
+                        <div class="bg_bell"></div>
+                        <div class="min_cercle"></div>
+                    </div>
+
+                    <!-- Overlay de notification -->
+                    <div
+                        class="notification-overlay"
+                        id="notificationOverlay"
+                        aria-hidden="true"
+                    >
+                        <div
+                            class="notification-bubble"
+                            id="notificationBubble"
+                            role="dialog"
+                            aria-modal="true"
+                        >
+                            <p>
+                                Bonjour ! Voici quelques informations
+                                importantes :
+                            </p>
+                            <ol>
+                                <li>
+                                    Vous pouvez modifier votre état émotionnel à
+                                    tout moment de la journée.
+                                </li>
+                                <li>
+                                    Votre état émotionnel sera enregistré
+                                    localement à partir de 00h00.
+                                </li>
+                                <li>
+                                    Vous aurez un suivi de vos émotions sur un
+                                    mois avec notre graphique mis à jour
+                                    quotidiennement.
+                                </li>
+                                <li>
+                                    Vous pourrez visualiser votre taux
+                                    émotionnel au quotidien.
+                                </li>
+                                <li>
+                                    Vos informations sont stockées localement
+                                    dans votre navigateur, en
+                                    <a
+                                        href="https://www.journaldunet.com/web-tech/developpeur/1100751-web-storage-stockage-des-donnees-dans-le-navigateur/"
+                                    >
+                                        <span class="link">"localStorage"</span>
+                                    </a>
+                                    et aucune donnée personnelle n'est
+                                    collectée.
+                                </li>
+                                <li>
+                                    Si vous supprimez l'historique ou utilisez
+                                    plusieurs profils depuis un autre
+                                    périphérique ou navigateur, les données
+                                    seront réinitialisées par défaut.
+                                </li>
+                            </ol>
+                            <button
+                                class="close-button"
+                                aria-label="Fermer la notification"
+                            >
+                                &times;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Fin profil patient -->
+
+            <!-- Sélecteur d'humeur -->
+            <section>
+                <div class="title">
+                    <h2 id="moodTitle">
+                        Comment vous sentez-vous aujourd'hui ?
+                    </h2>
+                </div>
+
+                <div class="container_mood">
+                    <!-- CORRECTION : id unique remplacé par class, onclick inline supprimé, ul/li inutiles retirés -->
+                    <button
+                        class="btn_mood"
+                        data-mood="Furieux"
+                        aria-label="Humeur : Furieux"
+                    >
+                        <div class="cirle_mood">
+                            <img
+                                src="../assets/icons/angry.webp"
+                                alt="Emoji en colère"
+                            />
+                        </div>
+                        <span class="mood_label">Furieux</span>
+                    </button>
+
+                    <button
+                        class="btn_mood"
+                        data-mood="Déprimé"
+                        aria-label="Humeur : Déprimé"
+                    >
+                        <div class="cirle_mood">
+                            <img
+                                src="../assets/icons/Sad_Face_Emoji.webp"
+                                alt="Emoji triste"
+                            />
+                        </div>
+                        <span class="mood_label">Déprimé</span>
+                    </button>
+
+                    <button
+                        class="btn_mood"
+                        data-mood="Fatigué"
+                        aria-label="Humeur : Fatigué"
+                    >
+                        <div class="cirle_mood">
+                            <img
+                                src="../assets/icons/yawning-face_1f971.webp"
+                                alt="Emoji fatigué"
+                            />
+                        </div>
+                        <span class="mood_label">Fatigué</span>
+                    </button>
+
+                    <button
+                        class="btn_mood"
+                        data-mood="Indifférent"
+                        aria-label="Humeur : Indifférent"
+                    >
+                        <div class="cirle_mood">
+                            <img
+                                src="../assets/icons/Neutral_Face_Emoji.webp"
+                                alt="Emoji indifférent"
+                            />
+                        </div>
+                        <!-- CORRECTION : "Indiffé..." → texte complet, géré en CSS avec text-overflow si besoin -->
+                        <span class="mood_label">Indifférent</span>
+                    </button>
+
+                    <button
+                        class="btn_mood"
+                        data-mood="Heureux"
+                        aria-label="Humeur : Heureux"
+                    >
+                        <div class="cirle_mood">
+                            <img
+                                src="../assets/icons/Party_Face_Emoji.webp"
+                                alt="Emoji heureux"
+                            />
+                        </div>
+                        <span class="mood_label">Heureux</span>
+                    </button>
+                </div>
+            </section>
+            <!-- Fin sélecteur d'humeur -->
+        </header>
+
+        <!-- ===== CONTENU PRINCIPAL ===== -->
+        <main>
+            <!-- Prise de rendez-vous -->
+            <section>
+                <div class="container_appontment">
+                    <h2>Prendre rendez-vous avec mon praticien</h2>
+                    <a href="planification.html">
+                        <div class="cards">
+                            <div class="container_doctor">
+                                <!-- CORRECTION : "Je prendre" → "Prendre" -->
+                                <p>Prendre rendez-vous</p>
+                                <div>
+                                    <i class="fa-solid fa-ellipsis"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+
+            <!-- Soins personnels -->
+            <section>
+                <div class="container_self">
+                    <i
+                        class="fa-solid fa-minus fa-2xl barre"
+                        id="bars"
+                        aria-hidden="true"
+                    ></i>
+                    <i
+                        class="fa-solid fa-chevron-down"
+                        id="chevron"
+                        aria-hidden="true"
+                    ></i>
+                    <h3>Soins personnels</h3>
+
+                    <nav class="nav_main" aria-label="Catégories de soins">
+                        <ul>
+                            <li>
+                                <button
+                                    class="nav_filter active"
+                                    data-filter="pratique"
+                                >
+                                    Pratique
+                                </button>
+                            </li>
+                            <li>
+                                <button class="nav_filter" data-filter="video">
+                                    Vidéo
+                                </button>
+                            </li>
+                            <li>
+                                <button class="nav_filter" data-filter="livres">
+                                    Livres
+                                </button>
+                            </li>
+                            <li>
+                                <button class="nav_filter" data-filter="tests">
+                                    Tests
+                                </button>
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="container_card">
+                        <div class="cards_self_car_green">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/person-in-lotus-position-500x500.webp"
+                                    alt="Méditation"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Méditation</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+
+                        <div class="cards_self_car_green_Lightness">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/bed-500x500.webp"
+                                    alt="Réveil en douceur"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Réveillez-vous</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+
+                        <div class="cards_self_car_blue">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/Praying Emoji [Free Download iPhone Emojis].webp"
+                                    alt="Objectif positif"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Objectif positif</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+
+                        <div class="cards_self_car_blue">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/face-exhaling-500x500.webp"
+                                    alt="Exercice de respiration"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Respiration</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+
+                        <div class="cards_self_car_green">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/eye-500x500.webp"
+                                    alt="Pleine conscience"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Conscience</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+
+                        <div class="cards_self_car_green_Lightness">
+                            <div class="bg_white">
+                                <img
+                                    src="../assets/icons/paint-emoji-png-4119290.webp"
+                                    alt="Activité créative"
+                                />
+                            </div>
+                            <div class="title_self_car">
+                                <h3>Créativité</h3>
+                                <p>30 min</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- ===== PIED DE PAGE ===== -->
+        <footer>
+            <nav id="nav_footer" aria-label="Navigation principale">
+                <div class="container_nav">
+                    <div class="navigation" id="html_scroll_nav">
+                        <a
+                            href="#container_profil"
+                            class="icon_link"
+                            aria-label="Accueil"
+                        >
+                            <i class="fa-solid fa-house"></i>
+                        </a>
+                        <a
+                            href="qrcode.html"
+                            class="icon_link"
+                            aria-label="QR Code"
+                        >
+                            <i class="fa-solid fa-qrcode"></i>
+                        </a>
+                        <div class="cercle_nav">
+                            <a href="#" class="icon_link" aria-label="Ajouter">
+                                <i class="fa-solid fa-plus"></i>
+                            </a>
+                        </div>
+                        <a
+                            href="graphique.html"
+                            class="icon_link"
+                            aria-label="Graphique émotionnel"
+                        >
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </a>
+                        <a href="#" class="icon_link" aria-label="Paramètres">
+                            <i class="fa-solid fa-gear"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </footer>
+
+        <!-- ===== SCRIPTS ===== -->
+        <script defer src="../js/script.js"></script>
+        <script defer>
+            document.addEventListener('DOMContentLoaded', function () {
+                // --- Initialisation app ---
+                if (typeof displayEntries === 'function') displayEntries();
+                if (typeof updateEmotionChart === 'function')
+                    updateEmotionChart();
+                if (typeof initializePatientApp === 'function')
+                    initializePatientApp();
+
+                // --- Éléments DOM ---
+                const cloche = document.getElementById('cloche');
+                const notificationOverlay = document.getElementById(
+                    'notificationOverlay'
+                );
+                const closeButton = document.querySelector('.close-button');
+                const barsIcon = document.getElementById('bars');
+                const chevronIcon = document.getElementById('chevron');
+                const navFooter = document.getElementById('nav_footer');
+
+                // --- Notification : affichage initial ---
+                const dejaAffiche = localStorage.getItem(
+                    'notificationDisplayed'
+                );
+                if (!dejaAffiche) {
+                    afficherNotification();
+                }
+
+                function afficherNotification() {
+                    notificationOverlay.style.display = 'block';
+                    notificationOverlay.setAttribute('aria-hidden', 'false');
+                    cloche.classList.add('clignote');
+                    localStorage.setItem('notificationDisplayed', 'true');
+                }
+
+                function fermerNotification() {
+                    notificationOverlay.style.display = 'none';
+                    notificationOverlay.setAttribute('aria-hidden', 'true');
+                    cloche.classList.remove('clignote');
+                }
+
+                // Toggle cloche
+                cloche.addEventListener('click', function () {
+                    if (
+                        notificationOverlay.style.display === 'none' ||
+                        notificationOverlay.style.display === ''
+                    ) {
+                        afficherNotification();
+                    } else {
+                        fermerNotification();
+                    }
+                });
+
+                // Fermeture via la croix
+                closeButton.addEventListener('click', fermerNotification);
+
+                // Fermeture en cliquant en dehors de la bulle
+                notificationOverlay.addEventListener('click', function (e) {
+                    if (e.target === notificationOverlay) {
+                        fermerNotification();
+                    }
+                });
+
+                // --- Boutons d'humeur ---
+                // CORRECTION : event delegation sur le container au lieu de onclick inline sur chaque bouton
+                const containerMood = document.querySelector('.container_mood');
+                if (containerMood) {
+                    containerMood.addEventListener('click', function (e) {
+                        const btn = e.target.closest('.btn_mood');
+                        if (btn) {
+                            const mood = btn.dataset.mood;
+                            if (typeof saveMoodAndUpdatePage === 'function') {
+                                saveMoodAndUpdatePage(mood);
+                            }
+                        }
+                    });
+                }
+
+                // --- Défilement : icône chevron / barre et navbar ---
+                const SCROLL_ICONE = 300;
+                const SCROLL_NAV = 250;
+
+                function gererDefilement() {
+                    const scrollY = document.documentElement.scrollTop;
+
+                    // Icône dans la section soins
+                    if (barsIcon && chevronIcon) {
+                        barsIcon.style.display =
+                            scrollY > SCROLL_ICONE ? 'none' : 'flex';
+                        chevronIcon.style.display =
+                            scrollY > SCROLL_ICONE ? 'flex' : 'none';
+                    }
+
+                    // Barre de navigation footer
+                    if (navFooter) {
+                        navFooter.style.display =
+                            scrollY < SCROLL_NAV ? 'none' : 'flex';
+                    }
+                }
+
+                window.addEventListener('scroll', gererDefilement, {
+                    passive: true,
+                });
+
+                // --- Scroll initial vers la nav footer au chargement ---
+                // (évite le "saut" brutal — on laisse l'utilisateur défiler naturellement)
+                // window.scrollTo({ top: 0 }); // décommente si tu veux revenir en haut
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <!-- En-tête -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/style.css" />
+    <link
+      rel="stylesheet"
+      href="../css/normalize.css"
+    />
+
+    <script
+      defer
+      src="https://kit.fontawesome.com/79857fa36d.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <title>Self-Care</title>
+  </head>
+
+  <body class="backround_graphique">
+    <!--loader-->
+    <div class="loader">
+      <div class="logo_loader">
+        <i class="fa-solid fa-chart-pie fa-beat"></i>
+      </div>
+    </div>
+    <!--End loader-->
+    <!-- En-tête -->
+    <header>
+      <div class="container_qrcode_info">
+        <a href="portail.html" class="back_button_graphique">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <a href="#" class="info_graphique">
+          <i class="fa-solid fa-circle-question"></i>
+        </a>
+        <!-- Overlay de notification -->
+        <div class="notification-overlay" id="notificationOverlay">
+          <div class="notification-bubble" id="notificationBubble">
+            <p>Voici la façon dont il fonctionne :</p>
+            <ol>
+              <li>
+                Lorsque vous ouvrez l'application, vous verrez une section
+                appelée "Suivi de mon état émotionnel".
+              </li>
+              <li>
+                Dans cette section, vous pouvez voir un graphique qui représente
+                votre état émotionnel au fil du temps.
+              </li>
+              <li>
+                Le graphique est basé sur les données d'humeur que vous avez
+                enregistrées dans l'application.
+              </li>
+              <li>
+                Plus vous enregistrez d'entrées d'humeur, plus le graphique sera
+                précis et représentatif de votre état émotionnel.
+              </li>
+              <li>
+                Vous pouvez également télécharger l'historique complet de vos
+                données d'humeur en cliquant sur le bouton "Télécharger
+                l'historique". Cela vous permet de conserver une copie de vos
+                données ou de les partager avec votre praticien si nécessaire.
+              </li>
+              <li>
+                Pour obtenir des informations supplémentaires sur l'application
+                et le graphique, cliquez sur l'icône en forme de point
+                d'interrogation.
+              </li>
+            </ol>
+            <span class="close-button">&times;</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- Section de suivi de l'état émotionnel -->
+      <section>
+        <div class="container_humeur">
+          <h4>Suivi de mon état émotionnel</h4>
+          <div id="entries"></div>
+          <button id="downloadBtn">Télécharger l'historique</button>
+          <div id="emotionChartContainer">
+            <canvas id="emotionChart"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <!-- Section des recommandations -->
+        <div id="recommendations"></div>
+      </section>
+    </main>
+
+    <footer></footer>
+    <script defer src="../js/script.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js@3.5.1"></script>
+
+    <script defer>
+      window.addEventListener("load", function () {
+        document.getElementById("recommendations").scrollIntoView();
+      });
+    </script>
+
+    <script defer>
+      document.addEventListener("DOMContentLoaded", function () {
+        displayEntries();
+        updateEmotionChart();
+      });
+    </script>
+
+    <script defer>
+      document.addEventListener("DOMContentLoaded", function () {
+        const infoQrCode = document.querySelector(".info_graphique");
+        const notificationOverlay = document.querySelector(
+          ".notification-overlay"
+        );
+        const notificationBubble = document.querySelector(
+          ".notification-bubble"
+        );
+        const closeButton = document.querySelector(".close-button");
+
+        // Afficher la bulle de notification lorsque vous cliquez sur l'icône
+        infoQrCode.addEventListener("click", function () {
+          notificationOverlay.style.display = "block";
+        });
+
+        // Masquer la bulle de notification lorsque vous cliquez sur le bouton de fermeture
+        closeButton.addEventListener("click", function () {
+          notificationOverlay.style.display = "none";
+        });
+      });
+    </script>
+    <script>
+      // Afficher les entrées d'humeur lors du chargement de la page
+      displayEntries();
+
+      // Fonction pour mettre à jour le graphique d'émotions
+      function updateEmotionChart() {
+        // Récupérer les données des émotions enregistrées dans le stockage local
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+        const emotionsData = calculateEmotionData(entries);
+
+        // Créer le graphique en camembert avec les données des émotions
+        const ctx = document.getElementById("emotionChart").getContext("2d");
+        new Chart(ctx, {
+          type: "pie",
+          data: emotionsData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+          },
+        });
+        // Mettre à jour les recommandations en fonction de l'émotion actuelle
+        const currentMood = localStorage.getItem("currentMood");
+        const recommendationsDiv = document.getElementById("recommendations");
+        const recommendation = getRecommendations(currentMood);
+        recommendationsDiv.innerHTML = `<p>${recommendation}</p>`;
+      }
+
+      function getRecommendations(emotion) {
+        // Exemple de recommandations pour chaque émotion
+        const recommendations = {
+          Furieux:
+            "Recommandation pour gérer la colère. Prenez quelques instants pour vous calmer, respirez profondément et essayez de comprendre ce qui a déclenché votre colère. Vous pouvez également envisager de pratiquer des techniques de gestion de la colère, comme la méditation ou l'exercice physique, pour canaliser cette émotion de manière positive.",
+          Déprimé:
+            "Recommandation pour améliorer l'humeur. Cherchez du soutien auprès de vos proches, parlez de ce que vous ressentez et essayez de vous engager dans des activités qui vous apportent du plaisir. Il est important de prendre soin de vous-même et d'envisager de consulter un professionnel de la santé si vous vous sentez constamment déprimé.",
+          Indifférent:
+            "Recommandation pour se sentir plus impliqué. Essayez de vous reconnecter avec vos émotions en explorant vos intérêts et en vous engageant dans des activités qui vous passionnent. Parlez à quelqu'un de confiance de ce que vous ressentez, car il peut être utile d'exprimer vos émotions pour mieux les comprendre.",
+          Fatigué:
+            "Recommandation pour se reposer et récupérer. Accordez-vous du temps pour vous reposer et vous ressourcer. Une bonne nuit de sommeil peut être bénéfique pour rétablir votre énergie. Si vous vous sentez constamment fatigué, assurez-vous de prendre soin de votre bien-être général et de consulter un professionnel de la santé si nécessaire.",
+          Heureux:
+            "Recommandation pour cultiver le bonheur. Profitez de cette émotion positive en la partageant avec les autres et en cultivant des moments de joie. Pratiquez la gratitude en tenant un journal des choses positives qui vous arrivent chaque jour.",
+        };
+
+        // Rappel que les émotions et leur gestion peuvent varier d'une personne à l'autre
+        const reminder =
+          "Ces recommandations sont de nature générale, et il est essentiel de se rappeler que chaque personne réagit différemment aux émotions. N'hésitez pas à adapter ces conseils en fonction de votre situation personnelle et à demander de l'aide si vous en avez besoin. Le bien-être émotionnel est essentiel pour une vie équilibrée, alors prenez soin de vous !";
+
+        // Retourner la recommandation correspondant à l'émotion, avec le rappel inclus
+        const recommendation =
+          recommendations[emotion] ||
+          "Aucune recommandation disponible pour cette émotion.";
+
+        // Styling des recommandations
+        const styledRecommendation = `
+    <div style="background-color: #1c2d27; padding-left: 15px; padding-top: 15px; color: #f5f5f5;">
+      <p style="font-weight: bold;">Recommandation pour ${emotion} :</p>
+      <p style="padding-top: 10px; width: 95%;">${recommendation}</p>
+      <p style="color: #888; font-style: italic; font-size: 14px; padding-top: 15px; width: 95%;">${reminder}</p>
+    </div>
+  `;
+
+        return styledRecommendation;
+      }
+
+      // Fonction pour enregistrer l'humeur sélectionnée par l'utilisateur
+      function saveMood(mood) {
+        const now = new Date();
+        const entryDate = now.toLocaleDateString("fr-FR");
+        const entryTime = now.toLocaleTimeString("fr-FR", {
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+
+        // Rechercher une entrée existante avec la même date
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+        const existingEntryIndex = entries.findIndex(
+          (entry) => entry.date === entryDate
+        );
+
+        if (existingEntryIndex !== -1) {
+          // Remplacer l'entrée existante avec la nouvelle humeur
+          entries[existingEntryIndex].mood = mood;
+        } else {
+          // Ajouter une nouvelle entrée
+          entries.push({
+            date: entryDate,
+            time: entryTime,
+            mood: mood,
+          });
+        }
+
+        localStorage.setItem("entries", JSON.stringify(entries));
+
+        localStorage.setItem("currentMood", mood);
+        localStorage.setItem("currentMoodTime", entryTime);
+
+        // Mettre à jour le graphique des émotions
+        updateEmotionChart();
+
+        // Mettre à jour l'élément HTML des entrées d'humeur
+        displayEntries();
+      }
+
+      // Fonction pour enregistrer l'humeur et actualiser la page
+      function saveMoodAndUpdatePage(mood) {
+        // Enregistrer l'humeur dans le stockage local
+        saveMood(mood);
+
+        // Actualiser la page
+        location.reload();
+      }
+
+      // Fonction pour calculer les données du graphique d'émotions
+      const emotions = [
+        "Furieux",
+        "Déprimé",
+        "Indifférent",
+        "Heureux",
+        "Fatigué",
+      ];
+      function calculateEmotionData(entries) {
+        const emotionCounts = [0, 0, 0, 0, 0];
+
+        for (const entry of entries) {
+          const index = emotions.indexOf(entry.mood);
+          if (index !== -1) {
+            emotionCounts[index]++;
+          }
+        }
+
+        return {
+          labels: emotions,
+          datasets: [
+            {
+              data: emotionCounts,
+              backgroundColor: [
+                "#ff0000",
+                "#1a1a1a",
+                "#f5f5dc",
+                "#ffff00",
+                "#ef58ef",
+              ],
+            },
+          ],
+        };
+      }
+
+      // Fonction pour afficher les entrées d'humeur
+      function displayEntries() {
+        const entriesContainer = document.getElementById("entries");
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+
+        // Vérifier s'il y a des entrées enregistrées
+        if (entries.length > 0) {
+          const entryHTML = entries
+            .map((entry) => createEntryHTML(entry.date, entry.mood))
+            .join("");
+          entriesContainer.innerHTML = entryHTML;
+        } else {
+          entriesContainer.innerHTML =
+            "<p class='no-entries'>Aucune entrée d'humeur enregistrée.</p>";
+        }
+
+        // Ajouter du style au paragraphe généré
+        const noEntriesElement = entriesContainer.querySelector(".no-entries");
+        if (noEntriesElement) {
+          noEntriesElement.style.color = "#f5f5f5";
+          noEntriesElement.style.textAlign = "center";
+          noEntriesElement.style.fontWeight = "bold";
+        }
+      }
+
+      /**
+       * Crée le code HTML pour une entrée d'humeur
+       * @param {string} date - La date de l'entrée
+       * @param {string} mood - L'humeur enregistrée
+       * @returns {string} Le code HTML de l'entrée
+       */
+
+      // Fonction pour obtenir l'heure actuelle au format HH:mm
+      function getCurrentTime() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, "0");
+        const minutes = String(now.getMinutes()).padStart(2, "0");
+        return `${hours}:${minutes}`;
+      }
+      // Fonction pour générer le code HTML d'une entrée d'humeur
+      function createEntryHTML(date, mood) {
+        const today = new Date().toLocaleDateString();
+        const entryDate = date === today ? "Aujourd'hui<br>" : date;
+        const entryHTML = `
+    <div class="entry">
+      <div class="date">${entryDate}</div>
+      <div class="mood">
+        ${
+          date === today
+            ? "<span class='highlighted'>Votre état d'humeur actuel est :</span>"
+            : "État d'humeur :"
+        }
+        <span class="name">${mood}</span>
+      </div>
+    </div>
+  `;
+        return entryHTML;
+      }
+
+      // Variable pour contrôler le téléchargement en cours
+      let isDownloading = false;
+
+      // Gestion du téléchargement de l'historique
+      const downloadBtn = document.getElementById("downloadBtn");
+      downloadBtn.addEventListener("click", function () {
+        downloadHistory();
+      });
+
+      // Fonction pour télécharger l'historique d'humeur
+      function downloadHistory() {
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+        const patientName = localStorage.getItem("patientFullName");
+        const currentDate = new Date().toISOString().split("T")[0];
+        const fileName = `historique_humeur_${patientName}_${currentDate}.html`;
+
+        // Ajouter le nom du patient à chaque entrée
+        entries.forEach((entry) => {
+          entry.name = patientName;
+        });
+
+        // Création du contenu du fichier
+        const fileContent = generateHistoryContent(entries);
+
+        // Création du fichier à télécharger
+        const fileBlob = new Blob([fileContent], {
+          type: "text/plain;charset=utf-8",
+        }); // Ajout de l'encodage UTF-8
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(fileBlob);
+        downloadLink.download = fileName;
+        downloadLink.click();
+      }
+
+      function generateHistoryContent(entries) {
+        const patientName = localStorage.getItem("patientFullName"); // Récupérer le nom complet du patient
+        let fileContent = `<table style="border: solid 2px black;  max-width: 768px; display: flex; align-items: center;     justify-content: space-around; flex-direction: colum;   overflow-y: hidden;   margin: 0;
+  padding: 0;
+  box-sizing: border-box;"><tr><th>Date</th><th>Humeur</th><th>Nom du patient</th></tr>`;
+
+        entries.forEach((entry) => {
+          fileContent += `<tr><td>${entry.date}</td><td>${entry.mood}</td><td>${patientName}</td></tr>`;
+        });
+
+        fileContent += "</table>";
+        return fileContent;
+      }
+
+      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      // Fonction pour initialiser l'application
+      function initializeApp() {
+        const loginForm = document.getElementById("loginForm");
+        loginForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const fullName = document.getElementById("fullName").value; // Récupérer le nom complet du patient
+          localStorage.setItem("isLoggedIn", "true");
+          localStorage.setItem("patientFullName", fullName); // Enregistrer le nom complet dans le stockage local
+
+          window.location.href = "portail.html";
+        });
+      }
+
+      // Fonction pour initialiser l'application du portail patient
+      function initializePatientApp() {
+        // Appel de la fonction pour afficher le nom d'utilisateur
+        displayUsername();
+      }
+
+      // Fonction pour afficher le nom d'utilisateur dans le portail du patient
+      function displayUsername() {
+        const fullName = localStorage.getItem("patientFullName");
+        if (fullName) {
+          const nameElement = document.querySelector(".name");
+          nameElement.textContent = fullName;
+        }
+      }
+
+      // Appel des fonctions d'initialisation
+      document.addEventListener("DOMContentLoaded", function () {
+        initializeApp();
+        initializePatientApp();
+      });
+
+      //////////////////////////////////////////////////////////////////////////////////////
+
+      // Fonction pour afficher toutes les entrées d'humeur enregistrées
+      function displayEntries() {
+        const entriesContainer = document.getElementById("entries");
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+
+        // Vérifier s'il y a des entrées enregistrées
+        if (entries.length > 0) {
+          const entryHTML = entries
+            .map((entry) => createEntryHTML(entry.date, entry.mood))
+            .join("");
+          entriesContainer.innerHTML = entryHTML;
+        } else {
+          entriesContainer.innerHTML =
+            "<p class='no-entries'>Aucune entrée d'humeur enregistrée.</p>";
+        }
+      }
+
+      // Mettre à jour le graphique des émotions lors du chargement de la page
+      updateEmotionChart();
+
+      // Ajouter des écouteurs d'événements aux boutons d'humeur
+      const moodButtons = document.querySelectorAll(".mood-button");
+      moodButtons.forEach((button) => {
+        button.addEventListener("click", (event) => {
+          const selectedMood = event.target.dataset.mood;
+          saveMood(selectedMood);
+        });
+      });
+
+      // Fonction pour enregistrer l'humeur finale de la journée dans le graphique
+      function saveDailyMood() {
+        const entryDate = new Date().toLocaleDateString();
+
+        // Récupérer l'humeur actuelle du patient
+        const currentMood = localStorage.getItem("currentMood");
+
+        // Rechercher une entrée existante avec la même date
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+        const existingEntryIndex = entries.findIndex(
+          (entry) => entry.date === entryDate
+        );
+
+        if (existingEntryIndex !== -1) {
+          // Remplacer l'entrée existante avec l'humeur actuelle
+          entries[existingEntryIndex].mood = currentMood;
+        } else {
+          // Ajouter une nouvelle entrée
+          entries.push({
+            date: entryDate,
+            mood: currentMood,
+          });
+        }
+
+        localStorage.setItem("entries", JSON.stringify(entries));
+
+        // Mettre à jour le graphique des émotions
+        updateEmotionChart();
+      }
+
+      // Planifier l'enregistrement de l'humeur finale de la journée à minuit
+      const now = new Date();
+      const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1,
+        0,
+        0,
+        0
+      );
+      const timeUntilMidnight = midnight.getTime() - now.getTime();
+      setTimeout(saveDailyMood, timeUntilMidnight);
+      // Photo de profil
+      // Récupérer les éléments du DOM
+      const profilePicture = document.getElementById("profilePicture");
+      const profilePictureInput = document.getElementById(
+        "profilePictureInput"
+      );
+
+      // Ajouter un gestionnaire d'événement au champ de saisie de fichier
+      profilePictureInput.addEventListener("change", function (event) {
+        const file = event.target.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const imageUrl = e.target.result;
+            profilePicture.src = imageUrl;
+            // Vous pouvez enregistrer l'URL de l'image dans le stockage local ou l'envoyer au serveur pour le traitement ultérieur.
+            localStorage.setItem("profilePictureUrl", imageUrl);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // Chargement de l'image de profil depuis le stockage local lors du chargement de la page
+      window.addEventListener("DOMContentLoaded", function () {
+        const profilePictureUrl = localStorage.getItem("profilePictureUrl");
+
+        if (profilePictureUrl) {
+          // Affichage de l'image dans l'élément img
+          profilePicture.src = profilePictureUrl;
+        }
+      });
+
+      // Gestionnaire d'événement avant la fermeture de la fenêtre
+      window.addEventListener("beforeunload", function () {
+        // Récupération de l'URL de la photo de profil
+        const profilePictureUrl = localStorage.getItem("profilePictureUrl");
+
+        if (profilePictureUrl) {
+          // Révocation de l'URL pour libérer les ressources du navigateur
+          URL.revokeObjectURL(profilePictureUrl);
+        }
+      });
+      // end Photo de profil
+
+      // Fonction pour réinitialiser les données après un mois
+      function resetDataAfterMonth() {
+        const entries = JSON.parse(localStorage.getItem("entries")) || [];
+        const currentDate = new Date();
+
+        // Récupérer la date d'il y a un mois
+        const oneMonthAgo = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - 1,
+          currentDate.getDate()
+        );
+
+        // Filtrer les entrées antérieures à un mois
+        const filteredEntries = entries.filter((entry) => {
+          const entryDate = new Date(entry.date);
+          return entryDate >= oneMonthAgo;
+        });
+
+        // Enregistrer les entrées filtrées dans le stockage local
+        localStorage.setItem("entries", JSON.stringify(filteredEntries));
+      }
+
+      // Appel de la fonction pour réinitialiser les données après un mois
+      resetDataAfterMonth();
+
+      ///////////////////////////////////////////////////////////////////////////
+    </script>
+  </body>
+</html>

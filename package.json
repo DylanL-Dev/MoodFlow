@@ -1,0 +1,9 @@
+{
+  "name": "moodflow",
+  "version": "1.0.0",
+  "description": "Application web de suivi émotionnel MoodFlow.",
+  "private": true,
+  "dependencies": {
+    "normalize.css": "^8.0.1"
+  }
+}

@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="css/style.css" />
+        <link rel="stylesheet" href="css/normalize.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
+        <script
+            defer
+            src="https://kit.fontawesome.com/79857fa36d.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <title>Connexion à Self-Care</title>
+    </head>
+    <body class="background_login">
+        <header>
+            <section>
+                <div class="background_img">
+                    <img
+                        src="https://cdn.dribbble.com/users/1452232/screenshots/13865180/media/99212427b25d25571c377a0845792472.gif"
+                        alt="illustration zen"
+                    />
+                </div>
+                <div class="logo_login">
+                    <img
+                        src="assets/logos/f73fde586b3b5257a7d00d0d8216e288.webp"
+                        alt="logo"
+                    />
+                </div>
+            </section>
+        </header>
+        <main>
+            <section id="loginSection">
+                <h1>Accès à Self-car</h1>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="fullName">Nom complet :</label>
+                        <input
+                            type="text"
+                            id="fullName"
+                            required
+                            placeholder="Nom et prénom"
+                        />
+                    </div>
+                    <div class="btn_login">
+                        <button type="submit">Continuer</button>
+                        <i class="fa-sharp fa-solid fa-chevron-right"></i>
+                    </div>
+                </form>
+            </section>
+        </main>
+        <footer></footer>
+        <script defer src="js/script.js"></script>
+        <script defer>
+            document.addEventListener('DOMContentLoaded', function () {
+                initializeApp();
+            });
+        </script>
+    </body>
+</html>
